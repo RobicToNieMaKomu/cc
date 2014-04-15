@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
  *
  * @author RobicToNieMaKomu
  */
-@Path("/rest")
+@Path("/")
 @Produces("application/json")
 @Consumes("application/json")
 public class RESTResources {
