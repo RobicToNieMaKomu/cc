@@ -1,5 +1,6 @@
 package com.polmos.cc.rest;
 
+import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.Consumes;
@@ -16,9 +17,18 @@ import javax.ws.rs.Produces;
 @Consumes("application/json")
 public class RESTResources {
 
+    @Inject
+    private RESTClient restClient;
+    
     @GET
     @Path("/hello")
     public JsonObject sayHello() {
         return Json.createObjectBuilder().add("Hello", "world").build();
+    }
+    
+    @GET
+    @Path("/data")
+    public JsonObject getData() {
+        return restClient.sendGetRequest("http://kantor.aliorbank.pl/forex/download/csv");
     }
 }
