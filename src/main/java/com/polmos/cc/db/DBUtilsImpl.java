@@ -7,7 +7,6 @@ import com.polmos.cc.service.TimeUtils;
 import java.util.Date;
 import javax.inject.Inject;
 import javax.json.JsonObject;
-import org.bson.types.ObjectId;
 
 /**
  *
@@ -15,7 +14,7 @@ import org.bson.types.ObjectId;
  */
 public class DBUtilsImpl implements DBUtils {
 
-    private static final String MONGO_ID_KEY = "_id";
+    private static final String CREATION_TIME = "creationTime";
     
     @Inject
     private TimeUtils timeUtils;
@@ -32,8 +31,7 @@ public class DBUtilsImpl implements DBUtils {
             } else {
                 isoDate = timeUtils.toISO8601(new Date());
             }
-            ObjectId id = new ObjectId(isoDate);
-            output.put(MONGO_ID_KEY, id);
+            output.put(CREATION_TIME, isoDate);
         }
         return output;
     }
