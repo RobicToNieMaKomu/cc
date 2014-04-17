@@ -9,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -56,10 +57,14 @@ public class RESTResources {
         List<DBObject> allDocuments = dao.getAllDocuments();
         if (allDocuments != null) {
             for (DBObject dbObject : allDocuments) {
-                ab.add(dbObject.toString());
+                JsonObjectBuilder objBuilder = Json.createObjectBuilder();
+                for (String key : dbObject.keySet()) {
+                    objBuilder.add(key, dbObject.get(key).toString());
+                }
+                ab.add(objBuilder.build());
             }
         }
-        logger.debug("Response for client:" + output);
+        logger.info("Response for client:" + output);
         return output;
     }
     
