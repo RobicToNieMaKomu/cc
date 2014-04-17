@@ -52,7 +52,6 @@ public class RESTResources {
     @GET
     @Path("/all")
     public JsonArray getAll() {
-        JsonArray output = null;
         JsonArrayBuilder ab = Json.createArrayBuilder();
         List<DBObject> allDocuments = dao.getAllDocuments();
         if (allDocuments != null) {
@@ -64,6 +63,7 @@ public class RESTResources {
                 ab.add(objBuilder.build());
             }
         }
+        JsonArray output = ab.build();
         logger.info("Response for client:" + output);
         return output;
     }
