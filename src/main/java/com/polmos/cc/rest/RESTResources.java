@@ -14,6 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -24,6 +25,8 @@ import javax.ws.rs.Produces;
 @Consumes("application/json")
 public class RESTResources {
 
+    private static final Logger logger = Logger.getLogger(RESTResources.class);
+    
     @Inject
     private RESTClient restClient;
     
@@ -56,6 +59,7 @@ public class RESTResources {
                 ab.add(dbObject.toString());
             }
         }
+        logger.debug("Response for client:" + output);
         return output;
     }
     

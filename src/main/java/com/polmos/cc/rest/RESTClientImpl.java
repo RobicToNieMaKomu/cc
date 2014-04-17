@@ -1,11 +1,11 @@
 package com.polmos.cc.rest;
 
-import java.math.BigDecimal;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -13,6 +13,8 @@ import javax.ws.rs.client.Invocation;
  */
 public class RESTClientImpl implements RESTClient {
 
+    private static final Logger logger = Logger.getLogger(RESTClientImpl.class);
+    
     public RESTClientImpl() {
     }
 
@@ -20,14 +22,15 @@ public class RESTClientImpl implements RESTClient {
     public JsonObject sendGetRequest(String url) {
         JsonObject result = null;
         if (url != null && !url.isEmpty()) {
+            logger.debug("Sending get request to url:" + url);
             try {
                 Client client = ClientBuilder.newClient();
                 Invocation request = client.target(url).request("application/csv").accept("application/csv").buildGet();
                 String response = request.invoke(String.class);
-                System.out.println(response);
+                logger.debug("Response:" + response);
                 result = Json.createObjectBuilder().add("response", response).build();
             } catch (Exception e) {
-                System.out.println(e);
+                logger.error("Couldnt get resource", e);
             }
         }
         return result;

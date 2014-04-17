@@ -7,6 +7,7 @@ import com.polmos.cc.service.TimeUtils;
 import java.util.Date;
 import javax.inject.Inject;
 import javax.json.JsonObject;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -14,7 +15,7 @@ import javax.json.JsonObject;
  */
 public class DBUtilsImpl implements DBUtils {
 
-    private static final String CREATION_TIME = "creationTime";
+    private static Logger logger = Logger.getLogger(DBUtilsImpl.class);
     
     @Inject
     private TimeUtils timeUtils;
@@ -22,17 +23,21 @@ public class DBUtilsImpl implements DBUtils {
     @Override
     public DBObject convertJson(JsonObject json) {
         DBObject output = null;
+        logger.debug("Converting json:" + json);
         if (json != null) {
             output = (DBObject) JSON.parse(json.toString());
             String isoDate = "";
-            if (json.containsKey(Constants.EX_RATE_ID)) {
-                String aliorDate = json.getString(Constants.EX_RATE_ID);
+            if (json.containsKey(Constants.CREATION_TIME_PROPERTY)) {
+                String aliorDate = json.getString(Constants.CREATION_TIME_PROPERTY);
                 isoDate = timeUtils.toISO8601(aliorDate);
             } else {
                 isoDate = timeUtils.toISO8601(new Date());
             }
-            output.put(CREATION_TIME, isoDate);
+            if (isoDate != null) {
+                output.put(Constants.CREATION_TIME_PROPERTY, isoDate);
+            }
         }
+        logger.debug("Converted bson:" + output);
         return output;
     }
 }
