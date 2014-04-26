@@ -42,10 +42,9 @@ public class YahooFxDownloader implements Runnable {
 
     @Override
     public void run() {
-        logger.info("!!!Polling new data from Yahoo finance...");
+        logger.info("Polling new data from Yahoo finance...");
         try {
             Date time = now.get();
-            logger.info("time:" + time);
             if (isYahooOpen(time)) {
                 String query = yqLQueryBuilder.constructSelectQuery(ResourceManager.getAllKeys(BundleName.CURRENCIES));
                 logger.info("query:" + query);
@@ -56,7 +55,7 @@ public class YahooFxDownloader implements Runnable {
                 dao.createDocument(dbObject);
                 logger.info("Poll completed");
             } else {
-                logger.debug("Yahoo finance service is closed, skipping (" + time + ")");
+                logger.info("Yahoo finance service is closed, skipping (" + time + ")");
             }
         } catch (Exception e) {
             logger.error("Exception in YahooFxDownloader", e);
