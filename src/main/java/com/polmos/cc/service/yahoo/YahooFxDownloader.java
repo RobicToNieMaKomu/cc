@@ -28,19 +28,14 @@ public class YahooFxDownloader implements Runnable {
     private static final int CH = 16;
     private static final int SAT = 7;
     private static final int SUN = 1;
-   
     @Inject
     private RESTClient restClient;
-   
     @Inject
     private YQLQueryBuilder yqLQueryBuilder;
-   
     @Inject
     private DBUtils dBUtils;
-   
     @Inject
     private DAO dao;
-   
     @Inject
     @Now
     private Instance<Date> now;
@@ -48,17 +43,22 @@ public class YahooFxDownloader implements Runnable {
     @Override
     public void run() {
         logger.info("Polling new data from Yahoo finance...");
-        if (isYahooOpen(now.get())) {
-            String query = yqLQueryBuilder.constructSelectQuery(ResourceManager.getAllKeys(BundleName.CURRENCIES));
-            logger.info("query:" + query);
-            JsonObject response = restClient.sendGetRequest(URL_TO_YAHOO_FINANCE + query + JSON_FORMAT);
-            logger.info("response:" + response);
-            DBObject dbObject = dBUtils.convertJson(response);
-            logger.info("dbObject:" + dbObject);
-            dao.createDocument(dbObject);
-            logger.info("Poll completed");
-        } else {
-            logger.debug("Yahoo finance service is closed, skipping (" + now.get() + ")");
+        try {
+            Date time = now.get();
+            if (isYahooOpen(time)) {
+                String query = yqLQueryBuilder.constructSelectQuery(ResourceManager.getAllKeys(BundleName.CURRENCIES));
+                logger.info("query:" + query);
+                JsonObject response = restClient.sendGetRequest(URL_TO_YAHOO_FINANCE + query + JSON_FORMAT);
+                logger.info("response:" + response);
+                DBObject dbObject = dBUtils.convertJson(response);
+                logger.info("dbObject:" + dbObject);
+                dao.createDocument(dbObject);
+                logger.info("Poll completed");
+            } else {
+                logger.debug("Yahoo finance service is closed, skipping (" + time + ")");
+            }
+        } catch (Exception e) {
+            logger.error("Exception in YahooFxDownloader", e);
         }
     }
 
