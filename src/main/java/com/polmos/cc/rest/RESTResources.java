@@ -3,6 +3,7 @@ package com.polmos.cc.rest;
 import com.mongodb.DBObject;
 import com.polmos.cc.db.DAO;
 import com.polmos.cc.db.DBUtils;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import javax.json.Json;
@@ -27,28 +28,25 @@ import org.jboss.logging.Logger;
 public class RESTResources {
 
     private static final Logger logger = Logger.getLogger(RESTResources.class);
-    
     @Inject
     private RESTClient restClient;
-    
     @Inject
     private DAO dao;
-    
     @Inject
     private DBUtils dBUtils;
-    
+
     @GET
     @Path("/hello")
     public JsonObject sayHello() {
-        return Json.createObjectBuilder().add("Hello", "world").build();
+        return Json.createObjectBuilder().add("Hello:", new Date().toString()).build();
     }
-    
+
     @GET
     @Path("/data")
     public JsonObject getData() {
         return restClient.sendGetRequest("http://kantor.aliorbank.pl/forex/download/csv");
     }
-    
+
     @GET
     @Path("/all")
     public JsonArray getAll() {
@@ -67,7 +65,7 @@ public class RESTResources {
         logger.info("Response for client:" + output);
         return output;
     }
-    
+
     @POST
     @Path("/put")
     public void put(final JsonObject body) {

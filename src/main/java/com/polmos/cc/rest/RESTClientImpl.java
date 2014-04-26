@@ -1,5 +1,6 @@
 package com.polmos.cc.rest;
 
+import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
@@ -25,10 +26,10 @@ public class RESTClientImpl implements RESTClient {
             logger.debug("Sending get request to url:" + url);
             try {
                 Client client = ClientBuilder.newClient();
-                Invocation request = client.target(url).request("application/csv").accept("application/csv").buildGet();
+                Invocation request = client.target(url).request("application/json").accept("application/json").buildGet();
                 String response = request.invoke(String.class);
                 logger.debug("Response:" + response);
-                result = Json.createObjectBuilder().add("response", response).build();
+                result = Json.createReader(new StringReader(response)).readObject();
             } catch (Exception e) {
                 logger.error("Couldnt get resource", e);
             }

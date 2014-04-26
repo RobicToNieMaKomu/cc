@@ -1,0 +1,29 @@
+{
+ "query": {
+  "count": 2,
+  "created": "2014-04-26T10:12:19Z",
+  "lang": "en-US",
+  "results": {
+   "rate": [
+    {
+     "id": "PLNUSD",
+     "Name": "PLN to USD",
+     "Rate": "13.144",
+     "Date": "4/26/2014",
+     "Time": "6:00am",
+     "Ask": "13.159",
+     "Bid": "13.129"
+    },
+    {
+     "id": "PLNEUR",
+     "Name": "PLN to EUR",
+     "Rate": "0.8816",
+     "Date": "4/26/2014",
+     "Time": "6:00am",
+     "Ask": "0.8818",
+     "Bid": "0.8814"
+    }
+   ]
+  }
+ }
+}

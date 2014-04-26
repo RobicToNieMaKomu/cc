@@ -13,4 +13,8 @@ public class Constants {
     public static final String MONGODB_HOST_PROPERTY = "OPENSHIFT_MONGODB_DB_HOST";
     public static final String MONGODB_PORT_PROPERTY = "OPENSHIFT_MONGODB_DB_PORT";
     public static final String CREATION_TIME_PROPERTY = "creationTime";
+    public static final String CURRENCY_PROPERTY = "currency";
+    public static final String BUY_PROPERTY = "buy";
+    public static final String SELL_PROPERTY = "sell";
+    public static final String SPREAD_PROPERTY = "spread";
 }
