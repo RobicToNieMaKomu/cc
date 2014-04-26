@@ -1,4 +1,4 @@
-package com.polmos.cc.service;
+package com.polmos.cc.service.alior;
 
 import java.io.IOException;
 import javax.json.JsonObject;

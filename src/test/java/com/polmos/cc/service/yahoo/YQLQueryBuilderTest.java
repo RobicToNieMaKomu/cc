@@ -1,8 +1,8 @@
 package com.polmos.cc.service.yahoo;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,13 +27,13 @@ public class YQLQueryBuilderTest {
 
     @Test
     public void emptyInputTest() {
-        String output = builder.constructSelectQuery(Collections.<String>emptyList());
+        String output = builder.constructSelectQuery(Collections.<String>emptySet());
         Assert.assertEquals("", output);
     }
 
     @Test
     public void singlePairTest() {
-        List<String> input = new ArrayList<>();
+        Set<String> input = new HashSet<>();
         input.add("PLNUSD");
         String output = builder.constructSelectQuery(input);
         Assert.assertEquals("select * from yahoo.finance.xchange where pair in (\"PLNUSD\")", output);
@@ -41,10 +41,13 @@ public class YQLQueryBuilderTest {
 
     @Test
     public void multiplePairsTest() {
-         List<String> input = new ArrayList<>();
+        Set<String> input = new HashSet<>();
         input.add("PLNUSD");
         input.add("PLNEUR");
         String output = builder.constructSelectQuery(input);
-        Assert.assertEquals("select * from yahoo.finance.xchange where pair in (\"PLNUSD\", \"PLNEUR\")", output);
+        Assert.assertTrue(output.startsWith("select * from yahoo.finance.xchange where pair in ("));
+        Assert.assertTrue(output.contains("PLNUSD"));    //\"PLNUSD\", \"PLNEUR\")", output);
+        Assert.assertTrue(output.contains("PLNEUR"));
+        Assert.assertTrue(output.endsWith(")"));
     }
 }

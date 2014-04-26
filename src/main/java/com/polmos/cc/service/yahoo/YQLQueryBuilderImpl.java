@@ -1,6 +1,8 @@
 package com.polmos.cc.service.yahoo;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -15,16 +17,17 @@ public class YQLQueryBuilderImpl implements YQLQueryBuilder {
     private static final String COMMA = ", ";
     
     @Override
-    public String constructSelectQuery(List<String> currencyPairs) {
+    public String constructSelectQuery(Set<String> currencyPairs) {
         StringBuilder builder = new StringBuilder();
         if (currencyPairs != null && !currencyPairs.isEmpty()) {
             builder.append(SELECT_CLAUSE);
             builder.append(LEFT_BRACKET);
-            for (int i = 0; i < currencyPairs.size(); i++) {
+            Iterator<String> iterator = currencyPairs.iterator();
+            while (iterator.hasNext()) {
                 builder.append(QUOTES);
-                builder.append(currencyPairs.get(i));
+                builder.append(iterator.next());
                 builder.append(QUOTES);
-                if (i != currencyPairs.size() - 1) {
+                if (iterator.hasNext()) {
                     builder.append(COMMA);
                 }
             }
