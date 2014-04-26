@@ -42,9 +42,10 @@ public class YahooFxDownloader implements Runnable {
 
     @Override
     public void run() {
-        logger.info("Polling new data from Yahoo finance...");
+        logger.info("!!!Polling new data from Yahoo finance...");
         try {
             Date time = now.get();
+            logger.info("time:" + time);
             if (isYahooOpen(time)) {
                 String query = yqLQueryBuilder.constructSelectQuery(ResourceManager.getAllKeys(BundleName.CURRENCIES));
                 logger.info("query:" + query);
