@@ -50,8 +50,11 @@ public class YahooFxDownloader implements Runnable {
         logger.info("Polling new data from Yahoo finance...");
         if (isYahooOpen(now.get())) {
             String query = yqLQueryBuilder.constructSelectQuery(ResourceManager.getAllKeys(BundleName.CURRENCIES));
+            logger.info("query:" + query);
             JsonObject response = restClient.sendGetRequest(URL_TO_YAHOO_FINANCE + query + JSON_FORMAT);
+            logger.info("response:" + response);
             DBObject dbObject = dBUtils.convertJson(response);
+            logger.info("dbObject:" + dbObject);
             dao.createDocument(dbObject);
             logger.info("Poll completed");
         } else {
