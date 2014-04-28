@@ -35,7 +35,7 @@ public class Entrypoint {
     private YahooFxDownloader task;
     
     @PostConstruct
-    public void initialize() {
+    public void initialize() { 
         logger.info("Application is starting...");
         scheduledFuture = executorService.scheduleAtFixedRate(task, 0, fxPollInterval, TimeUnit.MINUTES);
     }

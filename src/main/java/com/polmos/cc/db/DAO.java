@@ -10,4 +10,15 @@ import java.util.List;
 public interface DAO {
     boolean createDocument(DBObject data);
     List<DBObject> getAllDocuments();
+    List<DBObject> getRecentTwoDocuments();
+    List<DBObject> getDocuments(Time time);
+    
+    enum Time {
+        TEN_MINUTES, 
+        ONE_HOUR,
+        ONE_DAY,
+        ONE_WEEK,
+        ONE_MONTH,
+        ALL
+    }
 }

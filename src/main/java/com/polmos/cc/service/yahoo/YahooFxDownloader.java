@@ -9,6 +9,7 @@ import com.polmos.cc.service.ResourceManager;
 import com.polmos.cc.service.yahoo.annotation.Now;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.json.JsonObject;
@@ -46,7 +47,8 @@ public class YahooFxDownloader implements Runnable {
         try {
             Date time = now.get();
             if (isYahooOpen(time)) {
-                String query = yqLQueryBuilder.constructSelectQuery(ResourceManager.getAllKeys(BundleName.CURRENCIES));
+                Set<String> pairs = yqLQueryBuilder.addBaseCurrencyToEachElement(ResourceManager.getAllKeys(BundleName.CURRENCIES));
+                String query = yqLQueryBuilder.constructSelectQuery(pairs);
                 logger.info("query:" + query);
                 JsonObject response = restClient.sendGetRequest(URL_TO_YAHOO_FINANCE + query + JSON_FORMAT);
                 logger.info("response:" + response);

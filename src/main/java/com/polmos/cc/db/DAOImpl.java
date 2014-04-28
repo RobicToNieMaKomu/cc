@@ -60,4 +60,14 @@ public class DAOImpl implements DAO {
         }
         return output;
     }
+
+    @Override
+    public List<DBObject> getDocuments(Time time) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<DBObject> getRecentTwoDocuments() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

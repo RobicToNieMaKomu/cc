@@ -1,5 +1,6 @@
 package com.polmos.cc.service.yahoo;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -9,4 +10,6 @@ import java.util.Set;
 public interface YQLQueryBuilder {
 
     String constructSelectQuery(Set<String> currencyPairs);
+    
+    Set<String> addBaseCurrencyToEachElement(Set<String> currencies);
 }

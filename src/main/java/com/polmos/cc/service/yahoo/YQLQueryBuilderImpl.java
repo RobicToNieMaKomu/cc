@@ -1,5 +1,7 @@
 package com.polmos.cc.service.yahoo;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +17,7 @@ public class YQLQueryBuilderImpl implements YQLQueryBuilder {
     private static final String RIGHT_BRACKET = ")";
     private static final String QUOTES = "\"";
     private static final String COMMA = ", ";
+    private static final String BASE_CURRENCY = "PLN";
     
     @Override
     public String constructSelectQuery(Set<String> currencyPairs) {
@@ -34,5 +37,16 @@ public class YQLQueryBuilderImpl implements YQLQueryBuilder {
             builder.append(RIGHT_BRACKET);
         }
         return builder.toString();
+    }
+
+    @Override
+    public Set<String> addBaseCurrencyToEachElement(Set<String> currencies) {
+        Set<String> output = new HashSet<>();
+        if (currencies != null) {
+            for (String currency : currencies) {
+                output.add(BASE_CURRENCY + currency);
+            }
+        }
+        return output;
     }
 }
