@@ -2,7 +2,11 @@ package com.polmos.cc.service.mst;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +17,9 @@ import java.util.Set;
  */
 public class MSTUtilsImpl implements MSTUtils {
 
+    private static final String SEPARATOR = "$$";
+    private static final String SEPARATOR_REGEX = "\\$\\$";
+
     @Override
     public float[][] convertCorrelationMxToDistanceMx(float[][] correlationMx) throws IOException {
         validateInputMx(correlationMx);
@@ -20,27 +27,61 @@ public class MSTUtilsImpl implements MSTUtils {
         float[][] output = new float[degree][degree];
         for (int i = 0; i < degree; i++) {
             for (int j = 0; j < degree; j++) {
-                output[i][j] = (float) Math.sqrt(0.5*(1-correlationMx[i][j]));
+                output[i][j] = (float) Math.sqrt(0.5 * (1 - correlationMx[i][j]));
             }
         }
         return output;
     }
 
     @Override
-    public Map<Node, Set<Node>> constructMst(float[][] distanceMx) throws IOException {
+    public Map<String, Set<String>> constructMst(List<String> currencySymbols, float[][] distanceMx) throws IOException {
         validateInputMx(distanceMx);
-        Map<Node, Set<Node>> output = new HashMap<>();
-        // Kruskal algorithm
-        
-        return output;
+        Map<String, Set<String>> graph = initGraph(currencySymbols);
+        Set<Set<String>> forest = initForest(currencySymbols);
+        List<String> sortedEdges = sortByDistanceAsc(currencySymbols, distanceMx);
+        for (String edge : sortedEdges) {
+            if (forest.size() != 1) {
+                String[] nodes = edge.split(SEPARATOR_REGEX);
+                String currA = nodes[0];
+                String currB = nodes[1];
+                
+                Set<String> nA = findForestContainingTree(forest, currA);
+                Set<String> nB = findForestContainingTree(forest, currB);
+                nA.addAll(nB);
+                forest.add(nA);
+                
+                Set<String> neighborsA = graph.get(currA);
+                Set<String> neighborsB = graph.get(currB);
+                neighborsA.add(currB);
+                neighborsB.add(currA);
+                graph.put(currA, neighborsA);
+                graph.put(currB, neighborsB);
+            } else {
+                continue;
+            }
+        }
+        return graph;
     }
 
     @Override
-    public List<Node[]> sortByDistanceAsc(List<Node> nodes, float[][] distanceMx) throws IOException {
+    public List<String> sortByDistanceAsc(List<String> currencySymbols, float[][] distanceMx) throws IOException {
         validateInputMx(distanceMx);
-        List<Node[]> output = new ArrayList<>();
-        if (nodes != null && nodes.size() == distanceMx.length) {
-            
+        List<String> output = new ArrayList<>();
+        int degree = distanceMx.length;
+        if (currencySymbols != null && currencySymbols.size() == degree) {
+            Map<String, Float> currToDstMap = new HashMap<>();
+            for (int i = 0; i < degree; i++) {
+                for (int j = i; j < degree; j++) {
+                    if (i != j) {
+                        currToDstMap.put(toStr(i, j, currencySymbols), distanceMx[i][j]);
+                    }
+                }
+            }
+            List<Map.Entry<String, Float>> listOfEntries = new ArrayList<>(currToDstMap.entrySet());
+            Collections.sort(listOfEntries, createMapComparator());
+            for (Map.Entry<String, Float> entry : listOfEntries) {
+                output.add(entry.getKey());
+            }
         }
         return output;
     }
@@ -57,6 +98,60 @@ public class MSTUtilsImpl implements MSTUtils {
             }
         }
     }
+
+    private String toStr(int i, int j, List<String> currencies) {
+        return "" + currencies.get(i) + SEPARATOR + currencies.get(j);
+    }
+
+    private Comparator<Map.Entry<String, Float>> createMapComparator() {
+        return new Comparator<Map.Entry<String, Float>>() {
+            @Override
+            public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
+                int result = 0;
+                if (o1 != null && o2 != null) {
+                    result = (o1.getValue() > o2.getValue()) ? 1 : -1;
+                    result = (o1.getValue() == o2.getValue()) ? 0 : result;
+                } else if (o1 == null && o2 != null) {
+                    result = -1;
+                } else if (o1 != null && o2 == null) {
+                    result = 1;
+                } else if (o1 == null && o2 == null) {
+                    result = 0;
+                }
+                return result;
+            }
+        };
+    }
+
+    private Map<String, Set<String>> initGraph(List<String> currencySymbols) {
+        Map<String, Set<String>> output = new HashMap<>();
+        for (String currency : currencySymbols) {
+            output.put(currency, new HashSet<String>());
+        }
+        return output;
+    }
     
+    private Set<Set<String>> initForest(List<String> currencySymbols) {
+        Set<Set<String>> output = new HashSet<>();
+        for (String currency : currencySymbols) {
+            Set<String> tree = new HashSet<>();
+            tree.add(currency);
+            output.add(tree);
+        }
+        return output;
+    } 
     
+    private Set<String> findForestContainingTree(Set<Set<String>> forest, String curr) {
+        Set<String> output = new HashSet<>();
+        Iterator<Set<String>> iterator = forest.iterator();
+        while (iterator.hasNext()) {
+            Set<String> tree = iterator.next();
+            if (tree.contains(curr)) {
+                output.addAll(tree);
+                iterator.remove();
+                break;
+            }
+        }
+        return output;
+    }
 }

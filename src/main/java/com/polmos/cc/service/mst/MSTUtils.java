@@ -13,13 +13,16 @@ public interface MSTUtils {
 
     float[][] convertCorrelationMxToDistanceMx(float [][] correlationMx) throws IOException;
     
-    Map<Node, Set<Node>> constructMst(float[][] distanceMx) throws IOException;
+    Map<String, Set<String>> constructMst(List<String> currencySymbols, float[][] distanceMx) throws IOException;
     
     /**
-     * Returns list of node pairs, sorted by their distances asc.
-     * Eg. {[PLN,USD], [AUD,EUR]...}
-     * @param nodes
-     * @return 
+     * Returns list of currency pairs, separated by '$$' and sorted by their distances asc.
+     * Eg. ["PLN$$USD", "AUD$$EUR" ... ]
+     * 
+     * @param currencySymbols
+     * @param distanceMx
+     * @return
+     * @throws IOException 
      */
-    List<Node[]> sortByDistanceAsc(List<Node> nodes, float[][] distanceMx) throws IOException;
+    List<String> sortByDistanceAsc(List<String> currencySymbols, float[][] distanceMx) throws IOException;
 }
