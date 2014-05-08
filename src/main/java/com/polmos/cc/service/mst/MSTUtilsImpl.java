@@ -57,7 +57,7 @@ public class MSTUtilsImpl implements MSTUtils {
                 graph.put(currA, neighborsA);
                 graph.put(currB, neighborsB);
             } else {
-                continue;
+                break;
             }
         }
         return graph;

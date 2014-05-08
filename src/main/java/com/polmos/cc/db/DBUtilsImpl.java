@@ -4,8 +4,12 @@ import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 import com.polmos.cc.constants.Constants;
 import com.polmos.cc.service.TimeUtils;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.inject.Inject;
+import javax.json.Json;
 import javax.json.JsonObject;
 import org.jboss.logging.Logger;
 
@@ -39,5 +43,23 @@ public class DBUtilsImpl implements DBUtils {
         }
         logger.debug("Converted bson:" + output);
         return output;
+    }
+
+    @Override
+    public JsonObject convertDBObject(DBObject dBObject) {
+        String json = JSON.serialize(dBObject);
+        return Json.createReader(new StringReader(json)).readObject();
+    }
+
+    @Override
+    public List<JsonObject> convertDBObject(List<DBObject> dBObjects) {
+        List<JsonObject> result = null;
+        if (dBObjects != null) {
+            result = new ArrayList<>();
+            for (DBObject dbObject : dBObjects) {
+                result.add(convertDBObject(dbObject));
+            }
+        }
+        return result;
     }
 }

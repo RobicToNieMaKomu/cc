@@ -11,5 +11,5 @@ public interface YQLQueryBuilder {
 
     String constructSelectQuery(Set<String> currencyPairs);
     
-    Set<String> addBaseCurrencyToEachElement(Set<String> currencies);
+    Set<String> addBaseCurrencyToEachElement(List<String> currencies);
 }

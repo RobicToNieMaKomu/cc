@@ -12,7 +12,7 @@ import javax.inject.Qualifier;
  * @author RobicToNieMaKomu
  */
 @Qualifier
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Now {

@@ -1,9 +1,10 @@
 package com.polmos.cc.service;
 
 import com.polmos.cc.constants.BundleName;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
 import org.jboss.logging.Logger;
 
 /**
@@ -25,11 +26,14 @@ public class ResourceManager {
         return result;
     }
 
-    public static Set<String> getAllKeys(BundleName bundleName) {
-        Set<String> result = new HashSet<>();
+    public static List<String> getAllKeys(BundleName bundleName) {
+        List<String> result = new ArrayList<>();
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(bundleName.getName());
-            result.addAll(bundle.keySet());
+            Enumeration<String> enumeration = bundle.getKeys();
+            while (enumeration.hasMoreElements()) {
+                result.add(enumeration.nextElement());
+            }
         } catch (Exception e) {
             logger.error("Something went wrong during gettin all keys from bundle:" + bundleName, e);
         }

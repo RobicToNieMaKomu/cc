@@ -40,7 +40,7 @@ public class YQLQueryBuilderImpl implements YQLQueryBuilder {
     }
 
     @Override
-    public Set<String> addBaseCurrencyToEachElement(Set<String> currencies) {
+    public Set<String> addBaseCurrencyToEachElement(List<String> currencies) {
         Set<String> output = new HashSet<>();
         if (currencies != null) {
             for (String currency : currencies) {

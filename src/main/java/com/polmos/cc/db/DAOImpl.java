@@ -62,7 +62,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<DBObject> getDocuments(Time time) {
+    public List<DBObject> getDocuments(int days) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
