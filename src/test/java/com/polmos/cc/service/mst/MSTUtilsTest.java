@@ -54,7 +54,7 @@ public class MSTUtilsTest {
     }
 
     @Test
-    public void testSomethingDude() throws IOException {
+    public void sortTest() throws IOException {
         List<String> currencies = new ArrayList<>();
         currencies.add("PLN");
         currencies.add("USD");
@@ -67,6 +67,21 @@ public class MSTUtilsTest {
         Assert.assertEquals("PLN$$EUR", output.get(0));
         Assert.assertEquals("USD$$EUR", output.get(1));
         Assert.assertEquals("PLN$$USD", output.get(2));
+    }
+    
+    @Test
+    public void sortEqualEdgesTest() throws IOException {
+        List<String> currencies = new ArrayList<>();
+        currencies.add("PLN");
+        currencies.add("USD");
+        currencies.add("EUR");
+        float[][] mx = {{0f, 0f, 0f}, {0, 0, 0}, {0, 0, 0}};
+        List<String> output = mstutils.sortByDistanceAsc(currencies, mx);
+        Assert.assertNotNull(output);
+        Assert.assertEquals(3, output.size());
+        Assert.assertTrue(output.contains("PLN$$EUR"));
+        Assert.assertTrue(output.contains("USD$$EUR"));
+        Assert.assertTrue(output.contains("PLN$$USD"));
     }
 
     @Test
