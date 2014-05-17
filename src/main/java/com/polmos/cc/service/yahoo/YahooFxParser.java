@@ -84,6 +84,12 @@ public class YahooFxParser implements FxParser {
     }
 
     private float toFloat(String value) {
-        return Float.parseFloat(value);
+        float output = 0;
+        try {
+            output = (value != null && !"N/A".equals(value)) ? Float.parseFloat(value) : 0;
+        } catch (NumberFormatException nfe) {
+            logger.error("Couldnt parse bid or ask:" + value, nfe);
+        }
+        return output;
     }
 }
