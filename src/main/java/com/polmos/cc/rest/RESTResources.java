@@ -28,9 +28,9 @@ public class RESTResources {
     
     @GET
     @Path("/mst/{range}")
-    public JsonObject getMST(@PathParam("range") int minutes) {
+    public JsonObject getMST(@PathParam("range") int minutes, @PathParam("type") String operationType) {
         try {
-            return processor.processRequest(minutes);
+            return processor.processRequest(minutes, operationType);
         } catch (IOException ex) {
             logger.error("Exception while processing REST call", ex);
             throw new WebApplicationException(Status.BAD_REQUEST);

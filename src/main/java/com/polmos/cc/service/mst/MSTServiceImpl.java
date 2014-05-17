@@ -2,6 +2,7 @@ package com.polmos.cc.service.mst;
 
 import com.mongodb.DBObject;
 import com.polmos.cc.constants.BundleName;
+import com.polmos.cc.constants.OperationType;
 import com.polmos.cc.db.DAO;
 import com.polmos.cc.db.DBUtils;
 import com.polmos.cc.service.ResourceManager;
@@ -28,17 +29,18 @@ public class MSTServiceImpl implements MSTService {
     private FxParser parser;
 
     @Override
-    public Map<String, Set<String>> generateMST(int days) throws IOException{
+    public Map<String, Set<String>> generateMST(int days, OperationType type) throws IOException{
         List<DBObject> docs = null;
         if (days == 0) {
             docs = dao.getRecentTwoDocuments();
         } else if (days > 0) {
             docs = dao.getDocuments(days);
         }
-        List<JsonObject> documents = dbUtils.convertDBObject(docs);
-        float[][] correlationMx = parser.parseFxTimeSeries(documents);
-        float[][] distanceMx = mstUtils.convertCorrelationMxToDistanceMx(correlationMx);
+        List<JsonObject> documents = dbUtils.convertDBObject(docs);//np 2 doki, posiadajace x jsonow
+        List<TimeWindow> timeSeries = parser.toFxTimeSeries(documents);
         List<String> currencies = ResourceManager.getAllKeys(BundleName.CURRENCIES);
+        float[][] correlationMx = mstUtils.generateCorrelationMx(currencies, timeSeries, type);
+        float[][] distanceMx = mstUtils.convertCorrelationMxToDistanceMx(correlationMx);
         return mstUtils.constructMst(currencies, distanceMx);
     }
 }

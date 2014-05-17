@@ -1,8 +1,13 @@
 package com.polmos.cc.service.yahoo;
 
+import com.polmos.cc.service.mst.ExRate;
 import com.polmos.cc.service.mst.FxParser;
+import com.polmos.cc.service.mst.TimeWindow;
+import java.util.ArrayList;
 import java.util.List;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -10,8 +15,72 @@ import javax.json.JsonObject;
  */
 public class YahooFxParser implements FxParser {
 
+    private static final Logger logger = Logger.getLogger(YahooFxParser.class);
+    private static final String CURR_ID_PROPERTY = "id";
+    private static final String BID_PROPERTY = "bid";
+    private static final String ASK_PROPERTY = "ask";
+    private static final String QUERY_PROPERTY = "query";
+    private static final String RESULT_PROPERTY = "results";
+    private static final String RATE_PROPERTY = "rate";
+
     @Override
-    public float[][] parseFxTimeSeries(List<JsonObject> timeSeries) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<TimeWindow> toFxTimeSeries(List<JsonObject> rawTimeWindow) {
+        List<TimeWindow> output = new ArrayList<>();
+        if (rawTimeWindow != null) {
+            for (JsonObject json : rawTimeWindow) {
+                List<ExRate> exRates = new ArrayList<>();
+                JsonObject queryJson = toQueryJson(json);
+                JsonObject resultJson = toResultJson(queryJson);
+                JsonArray jsonExRates = toJsonExRates(resultJson);
+                if (jsonExRates != null) {
+                    for (int i = 0; i < jsonExRates.size(); i++) {
+                        exRates.add(toExRate(jsonExRates.getJsonObject(i)));
+                    }
+                }
+                output.add(new TimeWindow(exRates));
+            }
+        }
+        return output;
+    }
+
+    private JsonArray toJsonExRates(JsonObject json) {
+        JsonArray output = null;
+        if (json != null && json.containsKey(RATE_PROPERTY)) {
+            output = json.getJsonArray(RATE_PROPERTY);
+        }
+        return output;
+    }
+
+    private JsonObject toQueryJson(JsonObject json) {
+        JsonObject output = null;
+        if (json != null && json.containsKey(QUERY_PROPERTY)) {
+            output = json.getJsonObject(QUERY_PROPERTY);
+        }
+        return output;
+    }
+
+    private JsonObject toResultJson(JsonObject json) {
+        JsonObject output = null;
+        if (json != null && json.containsKey(RESULT_PROPERTY)) {
+            output = json.getJsonObject(RESULT_PROPERTY);
+        }
+        return output;
+    }
+
+    private ExRate toExRate(JsonObject json) {
+        ExRate output = null;
+        if (json != null && json.containsKey(CURR_ID_PROPERTY) && json.containsKey(BID_PROPERTY) && json.containsKey(ASK_PROPERTY)) {
+            String id = json.getString(CURR_ID_PROPERTY);
+            String bid = json.getString(BID_PROPERTY);
+            String ask = json.getString(ASK_PROPERTY);
+            output = new ExRate(id, toFloat(ask), toFloat(bid));
+        } else {
+            logger.warn("Suspicious JSON:" + json);
+        }
+        return output;
+    }
+
+    private float toFloat(String value) {
+        return Float.parseFloat(value);
     }
 }

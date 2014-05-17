@@ -9,5 +9,5 @@ import javax.json.JsonObject;
  */
 public interface RequestProcessor {
     
-    JsonObject processRequest(int range) throws IOException;
+    JsonObject processRequest(int range, String type) throws IOException;
 }

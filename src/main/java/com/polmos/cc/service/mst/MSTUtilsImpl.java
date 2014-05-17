@@ -1,5 +1,6 @@
 package com.polmos.cc.service.mst;
 
+import com.polmos.cc.constants.OperationType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,12 +45,12 @@ public class MSTUtilsImpl implements MSTUtils {
                 String[] nodes = edge.split(SEPARATOR_REGEX);
                 String currA = nodes[0];
                 String currB = nodes[1];
-                
+
                 Set<String> nA = findForestContainingTree(forest, currA);
                 Set<String> nB = findForestContainingTree(forest, currB);
                 nA.addAll(nB);
                 forest.add(nA);
-                
+
                 Set<String> neighborsA = graph.get(currA);
                 Set<String> neighborsB = graph.get(currB);
                 neighborsA.add(currB);
@@ -84,6 +85,54 @@ public class MSTUtilsImpl implements MSTUtils {
             }
         }
         return output;
+    }
+
+    @Override
+    public float[][] generateCorrelationMx(List<String> currencySymbols, List<TimeWindow> timeSeries, OperationType type) {
+        float[][] output = null;
+        if (timeSeries != null && currencySymbols != null && type != null) {
+            int dimm = currencySymbols.size();
+            output = new float[dimm][dimm];
+            for (int i = 0; i < dimm; i++) {
+                String currA = currencySymbols.get(i);
+                float avgA = averageValue(currA, timeSeries, type);
+                for (int j = i; j < dimm; j++) {
+                    if (i != j) {
+                        String currB = currencySymbols.get(j);
+                        float avgB = averageValue(currB, timeSeries, type);
+                        float numerator = 0;
+                        float sa = 0;
+                        float sb = 0;
+                        for (TimeWindow timeWindow : timeSeries) {
+                            ExRate exRateA = timeWindow.forCurrency(currA);
+                            ExRate exRateB = timeWindow.forCurrency(currB);
+                            if (exRateA != null && exRateB != null) {
+                                float rA = exRateA.getValue(type);
+                                float rB = exRateB.getValue(type);
+                                numerator += (rA - avgA)*(rB - avgB);
+                                sa += (rA-avgA)*(rA-avgA); 
+                                sb += (rB-avgB)*(rB-avgB);
+                            }
+                        }
+                        float denominator = (sa != 0 && sb != 0) ? (float) (Math.sqrt(sa) * Math.sqrt(sb)) : 1;
+                        output[i][j] = numerator / denominator;
+                        output[j][i] = output[i][j];
+                    } else {
+                        output[i][j] = 1;
+                    }
+                }
+            }
+        }
+        return output;
+    }
+
+    private float averageValue(String currency, List<TimeWindow> timeSeries, OperationType type) {
+        float avg = 0;
+        for (TimeWindow timeWindow : timeSeries) {
+            ExRate exRate = timeWindow.forCurrency(currency);
+            avg += exRate.getValue(type);
+        }
+        return avg / timeSeries.size();
     }
 
     private void validateInputMx(float[][] correlationMx) throws IOException {
@@ -130,7 +179,7 @@ public class MSTUtilsImpl implements MSTUtils {
         }
         return output;
     }
-    
+
     private Set<Set<String>> initForest(List<String> currencySymbols) {
         Set<Set<String>> output = new HashSet<>();
         for (String currency : currencySymbols) {
@@ -139,8 +188,8 @@ public class MSTUtilsImpl implements MSTUtils {
             output.add(tree);
         }
         return output;
-    } 
-    
+    }
+
     private Set<String> findForestContainingTree(Set<Set<String>> forest, String curr) {
         Set<String> output = new HashSet<>();
         Iterator<Set<String>> iterator = forest.iterator();

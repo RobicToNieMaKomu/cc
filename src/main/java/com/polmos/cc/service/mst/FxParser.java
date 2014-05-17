@@ -8,6 +8,6 @@ import javax.json.JsonObject;
  * @author RobicToNieMaKomu
  */
 public interface FxParser {
-
-    float[][] parseFxTimeSeries(List<JsonObject> timeSeries);
+    
+    List<TimeWindow> toFxTimeSeries(List<JsonObject> rawTimeSeries);
 }
