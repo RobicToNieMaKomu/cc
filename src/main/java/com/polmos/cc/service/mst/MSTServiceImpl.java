@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.json.JsonObject;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -19,6 +20,8 @@ import javax.json.JsonObject;
  */
 public class MSTServiceImpl implements MSTService {
 
+     private static Logger logger = Logger.getLogger(MSTServiceImpl.class);
+    
     @Inject
     private MSTUtils mstUtils;
     @Inject

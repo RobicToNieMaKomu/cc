@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -18,6 +19,7 @@ import java.util.Set;
  */
 public class MSTUtilsImpl implements MSTUtils {
 
+    private static final Logger logger = Logger.getLogger(MSTUtilsImpl.class);
     private static final String SEPARATOR = "$$";
     private static final String SEPARATOR_REGEX = "\\$\\$";
 
@@ -129,7 +131,10 @@ public class MSTUtilsImpl implements MSTUtils {
     private float averageValue(String currency, List<TimeWindow> timeSeries, OperationType type) {
         float avg = 0;
         for (TimeWindow timeWindow : timeSeries) {
+            logger.info("timeWindow:" + timeWindow);
+            logger.info("number of currencies in series:" + timeWindow.getExRates().size());
             ExRate exRate = timeWindow.forCurrency(currency);
+            logger.info("exRate:" + exRate);
             avg += exRate.getValue(type);
         }
         return avg / timeSeries.size();
