@@ -1,5 +1,6 @@
 package com.polmos.cc.db;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -17,7 +18,6 @@ public class DAOImpl implements DAO {
 
     private static final Logger logger = Logger.getLogger(DAOImpl.class);
     private static final String EXCHANGE_RATES_COLLECTION = "rates";
-   
     @Inject
     private MongoDBConnector mongoDBConnector;
 
@@ -68,6 +68,15 @@ public class DAOImpl implements DAO {
 
     @Override
     public List<DBObject> getRecentTwoDocuments() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<DBObject> documents = new ArrayList<>();
+        DB db = mongoDBConnector.getDB();
+        try {
+            DBCursor cursor = db.getCollection(EXCHANGE_RATES_COLLECTION).find().sort(new BasicDBObject("_id", -1)).limit(2);
+            documents.addAll(cursor.toArray());
+        } finally {
+            db.requestDone();
+        }
+        logger.info("Num of requested documents:" + documents.size());
+        return documents;
     }
 }
