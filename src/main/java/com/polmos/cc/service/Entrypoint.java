@@ -37,6 +37,7 @@ public class Entrypoint {
     @PostConstruct
     public void initialize() { 
         logger.info("Application is starting...");
+        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
         scheduledFuture = executorService.scheduleAtFixedRate(task, 0, fxPollInterval, TimeUnit.MINUTES);
     }
     
