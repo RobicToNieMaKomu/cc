@@ -39,7 +39,7 @@ public class MSTServiceImpl implements MSTService {
         } else if (days > 0) {
             docs = dao.getDocuments(days);
         }
-        List<JsonObject> documents = dbUtils.convertDBObject(docs);//np 2 doki, posiadajace x jsonow
+        List<JsonObject> documents = dbUtils.convertDBObject(docs);
         List<TimeWindow> timeSeries = parser.toFxTimeSeries(documents);
         List<String> currencies = ResourceManager.getAllKeys(BundleName.CURRENCIES);
         float[][] correlationMx = mstUtils.generateCorrelationMx(currencies, timeSeries, type);

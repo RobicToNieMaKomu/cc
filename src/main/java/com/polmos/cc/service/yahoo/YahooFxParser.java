@@ -17,8 +17,8 @@ public class YahooFxParser implements FxParser {
 
     private static final Logger logger = Logger.getLogger(YahooFxParser.class);
     private static final String CURR_ID_PROPERTY = "id";
-    private static final String BID_PROPERTY = "bid";
-    private static final String ASK_PROPERTY = "ask";
+    private static final String BID_PROPERTY = "Bid";
+    private static final String ASK_PROPERTY = "Ask";
     private static final String QUERY_PROPERTY = "query";
     private static final String RESULT_PROPERTY = "results";
     private static final String RATE_PROPERTY = "rate";
@@ -34,7 +34,10 @@ public class YahooFxParser implements FxParser {
                 JsonArray jsonExRates = toJsonExRates(resultJson);
                 if (jsonExRates != null) {
                     for (int i = 0; i < jsonExRates.size(); i++) {
-                        exRates.add(toExRate(jsonExRates.getJsonObject(i)));
+                        ExRate exRate = toExRate(jsonExRates.getJsonObject(i));
+                        if (exRate != null) {
+                            exRates.add(exRate);
+                        }
                     }
                 }
                 output.add(new TimeWindow(exRates));

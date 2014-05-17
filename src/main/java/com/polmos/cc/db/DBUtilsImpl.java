@@ -54,7 +54,6 @@ public class DBUtilsImpl implements DBUtils {
     @Override
     public List<JsonObject> convertDBObject(List<DBObject> dBObjects) {
         List<JsonObject> result = null;
-        logger.info("Converting DBObjects to Json:" + dBObjects);
         if (dBObjects != null) {
             result = new ArrayList<>();
             for (DBObject dbObject : dBObjects) {

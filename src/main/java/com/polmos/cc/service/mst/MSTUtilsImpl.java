@@ -131,10 +131,7 @@ public class MSTUtilsImpl implements MSTUtils {
     private float averageValue(String currency, List<TimeWindow> timeSeries, OperationType type) {
         float avg = 0;
         for (TimeWindow timeWindow : timeSeries) {
-            logger.info("timeWindow:" + timeWindow);
-            logger.info("number of currencies in series:" + timeWindow.getExRates().size());
             ExRate exRate = timeWindow.forCurrency(currency);
-            logger.info("exRate:" + exRate);
             avg += exRate.getValue(type);
         }
         return avg / timeSeries.size();
