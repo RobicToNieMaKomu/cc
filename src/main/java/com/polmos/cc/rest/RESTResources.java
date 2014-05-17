@@ -8,6 +8,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
@@ -27,8 +28,8 @@ public class RESTResources {
     private RequestProcessor processor;
     
     @GET
-    @Path("/mst/{range}")
-    public JsonObject getMST(@PathParam("range") int minutes, @PathParam("type") String operationType) {
+    @Path("/mst")
+    public JsonObject getMST(@QueryParam("range") int minutes, @QueryParam("type") String operationType) {
         try {
             return processor.processRequest(minutes, operationType);
         } catch (IOException ex) {
