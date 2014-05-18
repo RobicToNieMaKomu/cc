@@ -160,13 +160,23 @@ public class MSTUtilsImpl implements MSTUtils {
             public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
                 int result = 0;
                 if (o1 != null && o2 != null) {
-                   if (o1.getValue().equals(o2.getValue())) {
-                       result = 0;
-                   } else if (o1.getValue() > o2.getValue()) {
-                       result = 1;
-                   } else {
-                       result = -1;
-                   }
+                    Float o1Value = o1.getValue();
+                    Float o2Value = o2.getValue();
+                    if (o1Value != null && o2Value != null) {
+                        if (o1Value > o2Value) {
+                            result = 1;
+                        } else if (o1Value == o2Value) {
+                            result = 0;
+                        } else {
+                            result = -1;
+                        }
+                    } else if (o1Value == null && o2Value != null) {
+                       result = -1; 
+                    } else if (o1Value != null && o2Value == null) {
+                        result = 1;
+                    } else if (o1Value == null && o2Value == null) {
+                        result = 0;
+                    }
                 } else if (o1 == null && o2 != null) {
                     result = -1;
                 } else if (o1 != null && o2 == null) {
