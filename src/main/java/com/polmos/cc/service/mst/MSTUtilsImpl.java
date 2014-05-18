@@ -82,13 +82,7 @@ public class MSTUtilsImpl implements MSTUtils {
             }
             List<Map.Entry<String, Float>> listOfEntries = new ArrayList<>(currToDstMap.entrySet());
             Collections.sort(listOfEntries, createMapComparator());
-            // -- hacking
-            List<Map.Entry<String, Float>> newList = new ArrayList<>();
-            for (int i = listOfEntries.size() - 1; i >= 0; i--) {
-                newList.add(listOfEntries.get(i));
-            }
-            // ----------
-            for (Map.Entry<String, Float> entry : newList) {
+            for (Map.Entry<String, Float> entry : listOfEntries) {
                 output.add(entry.getKey());
             }
         }
@@ -172,16 +166,16 @@ public class MSTUtilsImpl implements MSTUtils {
                     Float o2Value = o2.getValue();
                     if (o1Value != null && o2Value != null) {
                         if (o1Value > o2Value) {
-                            result = -1;
+                            result = 1;
                         } else if (o1Value == o2Value) {
                             result = 0;
                         } else {
-                            result = 1;
+                            result = -1;
                         }
                     } else if (o1Value == null && o2Value != null) {
                        result = 1; 
                     } else if (o1Value != null && o2Value == null) {
-                        result = 11;
+                        result = -1;
                     } else if (o1Value == null && o2Value == null) {
                         result = 0;
                     }
