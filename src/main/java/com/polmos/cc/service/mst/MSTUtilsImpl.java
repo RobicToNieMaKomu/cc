@@ -51,19 +51,20 @@ public class MSTUtilsImpl implements MSTUtils {
                 String[] nodes = edge.split(SEPARATOR_REGEX);
                 String currA = nodes[0];
                 String currB = nodes[1];
+                if (notAlreadyConnected(currA, currB, forest)) {
+                    Set<String> nA = findForestContainingTree(forest, currA);
+                    Set<String> nB = findForestContainingTree(forest, currB);
+                    nA.addAll(nB);
+                    forest.add(nA);
 
-                Set<String> nA = findForestContainingTree(forest, currA);
-                Set<String> nB = findForestContainingTree(forest, currB);
-                nA.addAll(nB);
-                forest.add(nA);
-
-                Set<String> neighborsA = graph.get(currA);
-                Set<String> neighborsB = graph.get(currB);
-                neighborsA.add(currB);
-                neighborsB.add(currA);
-                graph.put(currA, neighborsA);
-                graph.put(currB, neighborsB);
-                counter++;
+                    Set<String> neighborsA = graph.get(currA);
+                    Set<String> neighborsB = graph.get(currB);
+                    neighborsA.add(currB);
+                    neighborsB.add(currA);
+                    graph.put(currA, neighborsA);
+                    graph.put(currB, neighborsB);
+                    counter++;
+                }
             } else {
                 break;
             }
@@ -137,6 +138,16 @@ public class MSTUtilsImpl implements MSTUtils {
             }
         }
         return output;
+    }
+
+    private boolean notAlreadyConnected(String currA, String currB, Set<Set<String>> forest) {
+        boolean notConnected = true;
+        for (Set<String> cluster : forest) {
+            if (cluster.contains(currA) && cluster.contains(currB)) {
+                notConnected = false;
+            }
+        }
+        return notConnected;
     }
 
     private float averageValue(String currency, List<TimeWindow> timeSeries, OperationType type) {

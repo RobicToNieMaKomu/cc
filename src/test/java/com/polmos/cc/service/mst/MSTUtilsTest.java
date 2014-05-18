@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class MSTUtilsTest {
         Assert.assertEquals("USD$$EUR", output.get(1));
         Assert.assertEquals("PLN$$USD", output.get(2));
     }
-    
+
     @Test
     public void sortEqualEdgesTest() throws IOException {
         List<String> currencies = new ArrayList<>();
@@ -148,6 +149,17 @@ public class MSTUtilsTest {
         Assert.assertTrue(cN.contains("PLN"));
         Assert.assertTrue(cN.contains("NOK"));
         Assert.assertTrue(nN.contains("CHF"));
+    }
+
+    @Test
+    public void largeMstCreationBasedOnRandomMxTest() throws IOException {
+        int size = 500;
+        Map<String, Set<String>> output = mstutils.constructMst(list(size), randomDistanceMx(size));
+        int edges = 0;
+        for (Set<String> neighbors : output.values()) {
+            edges += neighbors.size();
+        }
+        Assert.assertEquals(size - 1, edges/2);
     }
 
     @Test
@@ -277,5 +289,29 @@ public class MSTUtilsTest {
             currencies.add(new Integer(i).toString());
         }
         return currencies;
+    }
+
+    private float[][] randomDistanceMx(int size) {
+        float[][] out = new float[size][size];
+        Random random = new Random();
+        for (int i = 0; i < size; i++) {
+            for (int j = i; j < size; j++) {
+                if (i == j) {
+                    out[i][j] = 0f;
+                } else {
+                    out[i][j] = random.nextFloat();
+                    out[j][i] = out[i][j];
+                }
+            }
+        }
+        return out;
+    }
+    
+    private List<String> list(int size) {
+        List<String> out = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            out.add(""+i);
+        }
+        return out;
     }
 }
