@@ -172,13 +172,7 @@ public class MSTUtilsImpl implements MSTUtils {
                     Float o1Value = o1.getValue();
                     Float o2Value = o2.getValue();
                     if (o1Value != null && o2Value != null) {
-                        if (o1Value > o2Value) {
-                            result = -1;
-                        } else if (o1Value == o2Value) {
-                            result = 0;
-                        } else {
-                            result = 1;
-                        }
+                        result = o1Value.compareTo(o2Value);
                     } else if (o1Value == null && o2Value != null) {
                        result = -1; 
                     } else if (o1Value != null && o2Value == null) {
