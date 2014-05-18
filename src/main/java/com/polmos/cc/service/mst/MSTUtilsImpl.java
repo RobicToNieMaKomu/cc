@@ -159,7 +159,9 @@ public class MSTUtilsImpl implements MSTUtils {
             @Override
             public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
                 int result = 0;
-                if (o1 != null && o2 != null) {
+                if (o1 == o2) {
+                  result = 0;  
+                } else if (o1 != null && o2 != null) {
                     Float o1Value = o1.getValue();
                     Float o2Value = o2.getValue();
                     if (o1Value != null && o2Value != null) {
