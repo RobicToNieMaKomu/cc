@@ -81,15 +81,8 @@ public class MSTUtilsImpl implements MSTUtils {
                 }
             }
             List<Map.Entry<String, Float>> listOfEntries = new ArrayList<>(currToDstMap.entrySet());
-            logger.info("ListOfEntries:\n" + listOfEntries);
             Collections.sort(listOfEntries, createMapComparator());
-            // --- hacking
-            List<Map.Entry<String, Float>> newlistOfEntries = new ArrayList<>();
-            for (int i = listOfEntries.size() - 1; i >= 0; i--) {
-                newlistOfEntries.add(listOfEntries.get(i));
-            }
-            // ----
-            for (Map.Entry<String, Float> entry : newlistOfEntries) {
+            for (Map.Entry<String, Float> entry : listOfEntries) {
                 output.add(entry.getKey());
             }
         }
