@@ -41,7 +41,10 @@ public class MSTUtilsImpl implements MSTUtils {
         validateInputMx(distanceMx);
         Map<String, Set<String>> graph = initGraph(currencySymbols);
         Set<Set<String>> forest = initForest(currencySymbols);
+        logger.info("Size of initial forest:" + forest.size());
         List<String> sortedEdges = sortByDistanceAsc(currencySymbols, distanceMx);
+        logger.info("Num of currencies:" + currencySymbols.size());
+        logger.info("Num of edges:" + sortedEdges.size());
         for (String edge : sortedEdges) {
             if (forest.size() != 1) {
                 String[] nodes = edge.split(SEPARATOR_REGEX);
