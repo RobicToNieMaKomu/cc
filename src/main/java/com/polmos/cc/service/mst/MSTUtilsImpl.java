@@ -45,6 +45,7 @@ public class MSTUtilsImpl implements MSTUtils {
         List<String> sortedEdges = sortByDistanceAsc(currencySymbols, distanceMx);
         logger.info("Num of currencies:" + currencySymbols.size());
         logger.info("Num of edges:" + sortedEdges.size());
+        int counter = 0;
         for (String edge : sortedEdges) {
             if (forest.size() != 1) {
                 String[] nodes = edge.split(SEPARATOR_REGEX);
@@ -62,10 +63,12 @@ public class MSTUtilsImpl implements MSTUtils {
                 neighborsB.add(currA);
                 graph.put(currA, neighborsA);
                 graph.put(currB, neighborsB);
+                counter++;
             } else {
                 break;
             }
         }
+        logger.info("Num of edges created:" + counter);
         logger.info("size of forest:" + forest.size());
         for (Set<String> tree : forest) {
             logger.info("size of each tree:" + tree.size());
