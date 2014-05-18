@@ -66,6 +66,11 @@ public class MSTUtilsImpl implements MSTUtils {
                 break;
             }
         }
+        logger.info("size of forest:" + forest.size());
+        for (Set<String> tree : forest) {
+            logger.info("size of each tree:" + tree.size());
+            logger.info(tree);
+        }
         return graph;
     }
 
@@ -114,9 +119,9 @@ public class MSTUtilsImpl implements MSTUtils {
                             if (exRateA != null && exRateB != null) {
                                 float rA = exRateA.getValue(type);
                                 float rB = exRateB.getValue(type);
-                                numerator += (rA - avgA)*(rB - avgB);
-                                sa += (rA-avgA)*(rA-avgA); 
-                                sb += (rB-avgB)*(rB-avgB);
+                                numerator += (rA - avgA) * (rB - avgB);
+                                sa += (rA - avgA) * (rA - avgA);
+                                sb += (rB - avgB) * (rB - avgB);
                             }
                         }
                         float denominator = (sa != 0 && sb != 0) ? (float) (Math.sqrt(sa) * Math.sqrt(sb)) : 1;
@@ -163,14 +168,14 @@ public class MSTUtilsImpl implements MSTUtils {
             public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
                 int result = 0;
                 if (o1 == o2) {
-                  result = 0;  
+                    result = 0;
                 } else if (o1 != null && o2 != null) {
                     Float o1Value = o1.getValue();
                     Float o2Value = o2.getValue();
                     if (o1Value != null && o2Value != null) {
                         result = o1Value.compareTo(o2Value);
                     } else if (o1Value == null && o2Value != null) {
-                       result = -1; 
+                        result = -1;
                     } else if (o1Value != null && o2Value == null) {
                         result = 1;
                     } else if (o1Value == null && o2Value == null) {
