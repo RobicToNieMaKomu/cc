@@ -112,8 +112,9 @@ public class DAOImpl implements DAO {
             String fromDate = timeUtils.toISO8601(from);
             String toDate = timeUtils.toISO8601(to);
             logger.info("FromDate:" + fromDate + ", toDate:" + toDate);
-            DBObject query = BasicDBObjectBuilder.start("$gte", fromDate).add("$lte", toDate).get();
-            DBCursor cursor = db.getCollection(EXCHANGE_RATES_COLLECTION).find(query).limit(MAX_DAILY_DOC_COUNT);
+            BasicDBObject query = new BasicDBObject();
+            query.put("creationTime", BasicDBObjectBuilder.start("$gte", fromDate).add("$lte", toDate).get());
+            DBCursor cursor = db.getCollection(EXCHANGE_RATES_COLLECTION).find(query).sort(new BasicDBObject("creationTime", -1)).limit(MAX_DAILY_DOC_COUNT);
             logger.info("cursor size:" + cursor.size());
             output.addAll(cursor.toArray());
         } finally {
