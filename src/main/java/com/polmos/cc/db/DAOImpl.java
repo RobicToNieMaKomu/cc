@@ -112,7 +112,7 @@ public class DAOImpl implements DAO {
             String fromDate = timeUtils.toISO8601(from);
             String toDate = timeUtils.toISO8601(to);
             DBObject query = BasicDBObjectBuilder.start("$gte", fromDate).add("$lte", toDate).get();
-            DBCursor cursor = db.getCollection(EXCHANGE_RATES_COLLECTION).find().sort(query).limit(MAX_DAILY_DOC_COUNT);
+            DBCursor cursor = db.getCollection(EXCHANGE_RATES_COLLECTION).find(query).sort(new BasicDBObject("_id", -1)).limit(MAX_DAILY_DOC_COUNT);
 
             output.addAll(cursor.toArray());
         } finally {
