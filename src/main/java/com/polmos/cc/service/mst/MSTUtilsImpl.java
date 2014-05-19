@@ -143,7 +143,7 @@ public class MSTUtilsImpl implements MSTUtils {
         float avg = 0;
         for (TimeWindow timeWindow : timeSeries) {
             ExRate exRate = timeWindow.forCurrency(currency);
-            avg += exRate.getValue(type);
+            avg += (exRate != null) ? exRate.getValue(type) : 0;
         }
         return avg / timeSeries.size();
     }
