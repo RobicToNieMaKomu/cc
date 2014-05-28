@@ -7,6 +7,7 @@ import com.polmos.cc.db.DAO;
 import com.polmos.cc.db.DBUtils;
 import com.polmos.cc.service.ResourceManager;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,15 @@ public class MSTServiceImpl implements MSTService {
             docs = dao.getDocuments(days);
         }
         List<JsonObject> documents = dbUtils.convertDBObject(docs);
-        List<TimeWindow> timeSeries = parser.toFxTimeSeries(documents);
+        List<TimeWindow> timeSeries = new ArrayList<>();
+        logger.info("Conversion of raw jsons to time series started...");
+        int counter = 0;
+        if (documents != null) {
+            for (JsonObject json : documents) {
+                timeSeries.add(parser.toFxTimeSeries(json));
+                logger.info("TimeSeries num:" + counter + " computed");
+            }
+        }
         List<String> currencies = ResourceManager.getAllKeys(BundleName.CURRENCIES);
         float[][] correlationMx = mstUtils.generateCorrelationMx(currencies, timeSeries, type);
         float[][] distanceMx = mstUtils.convertCorrelationMxToDistanceMx(correlationMx);

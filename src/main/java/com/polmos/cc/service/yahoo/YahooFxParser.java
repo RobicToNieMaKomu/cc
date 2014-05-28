@@ -24,23 +24,32 @@ public class YahooFxParser implements FxParser {
     private static final String RATE_PROPERTY = "rate";
 
     @Override
-    public List<TimeWindow> toFxTimeSeries(List<JsonObject> rawTimeWindow) {
-        List<TimeWindow> output = new ArrayList<>();
+    public TimeWindow toFxTimeSeries(JsonObject rawTimeWindow) {
+        TimeWindow output = null;
         if (rawTimeWindow != null) {
-            for (JsonObject json : rawTimeWindow) {
-                List<ExRate> exRates = new ArrayList<>();
-                JsonObject queryJson = toQueryJson(json);
-                JsonObject resultJson = toResultJson(queryJson);
-                JsonArray jsonExRates = toJsonExRates(resultJson);
-                if (jsonExRates != null) {
-                    for (int i = 0; i < jsonExRates.size(); i++) {
-                        ExRate exRate = toExRate(jsonExRates.getJsonObject(i));
-                        if (exRate != null) {
-                            exRates.add(exRate);
-                        }
+            List<ExRate> exRates = new ArrayList<>();
+            JsonObject queryJson = toQueryJson(rawTimeWindow);
+            JsonObject resultJson = toResultJson(queryJson);
+            JsonArray jsonExRates = toJsonExRates(resultJson);
+            if (jsonExRates != null) {
+                for (int i = 0; i < jsonExRates.size(); i++) {
+                    ExRate exRate = toExRate(jsonExRates.getJsonObject(i));
+                    if (exRate != null) {
+                        exRates.add(exRate);
                     }
                 }
-                output.add(new TimeWindow(exRates));
+            }
+            output = new TimeWindow(exRates);
+        }
+        return output;
+    }
+
+    @Override
+    public List<TimeWindow> toFxTimeSeries(List<JsonObject> rawTimeWindows) {
+        List<TimeWindow> output = new ArrayList<>();
+        if (rawTimeWindows != null) {
+            for (JsonObject json : rawTimeWindows) {
+                output.add(toFxTimeSeries(json));
             }
         }
         return output;

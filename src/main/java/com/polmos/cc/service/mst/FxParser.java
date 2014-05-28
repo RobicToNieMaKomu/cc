@@ -9,5 +9,7 @@ import javax.json.JsonObject;
  */
 public interface FxParser {
     
+    TimeWindow toFxTimeSeries(JsonObject singleRawTimeSeries);
+    
     List<TimeWindow> toFxTimeSeries(List<JsonObject> rawTimeSeries);
 }
