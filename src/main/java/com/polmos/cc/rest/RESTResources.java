@@ -2,14 +2,13 @@ package com.polmos.cc.rest;
 
 import java.io.IOException;
 import javax.inject.Inject;
-import javax.json.JsonObject;
+import javax.json.JsonArray;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.jboss.logging.Logger;
 
@@ -26,15 +25,22 @@ public class RESTResources {
 
     @Inject
     private RequestProcessor processor;
-    
+
     @GET
     @Path("/mst")
-    public JsonObject getMST(@QueryParam("range") int minutes, @QueryParam("type") String operationType) {
+    public Response getTimeSeries(@QueryParam("range") int minutes, @QueryParam("type") String operationType) {
+        Response response = null;
         try {
-            return processor.processRequest(minutes, operationType);
+            JsonArray timeSeries = processor.processRequest(minutes, operationType);
+            if (timeSeries == null) {
+                response = Response.status(Status.NOT_FOUND).build();
+            } else {
+                response = Response.ok(timeSeries).build();
+            }
         } catch (IOException ex) {
             logger.error("Exception while processing REST call", ex);
-            throw new WebApplicationException(Status.BAD_REQUEST);
+            response = Response.status(Status.BAD_REQUEST).build();
         }
+        return response;
     }
 }

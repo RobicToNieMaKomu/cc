@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import org.jboss.logging.Logger;
 
@@ -52,14 +54,16 @@ public class DBUtilsImpl implements DBUtils {
     }
 
     @Override
-    public List<JsonObject> convertDBObject(List<DBObject> dBObjects) {
-        List<JsonObject> result = null;
+    public JsonArray convertDBObject(List<DBObject> dBObjects) {
+        JsonArray result = null;
         if (dBObjects != null) {
-            result = new ArrayList<>();
+            JsonArrayBuilder builder = Json.createArrayBuilder();
             for (DBObject dbObject : dBObjects) {
-                result.add(convertDBObject(dbObject));
+                builder.add(convertDBObject(dbObject));
             }
+            result = builder.build();
         }
+        logger.info("Size of jsonArray:" + ((result != null) ? result.size() : null));
         return result;
     }
 }

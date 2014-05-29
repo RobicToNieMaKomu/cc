@@ -1,7 +1,7 @@
 package com.polmos.cc.rest;
 
 import java.io.IOException;
-import javax.json.JsonObject;
+import javax.json.JsonArray;
 
 /**
  *
@@ -9,5 +9,5 @@ import javax.json.JsonObject;
  */
 public interface RequestProcessor {
     
-    JsonObject processRequest(int range, String type) throws IOException;
+    JsonArray processRequest(int range, String type) throws IOException;
 }
