@@ -38,11 +38,11 @@ public class MongoDBConnector {
         }
         try {
             logger.info("MONGODB INITIALIZATION");
-            logger.info("host:");
-            logger.info("port:");
-            logger.info("db:");
-            logger.info("user:");
-            logger.info("password:");
+            logger.info("host:" + host);
+            logger.info("port:" + portProp);
+            logger.info("db:" + db);
+            logger.info("user:" + user);
+            logger.info("password:" + password);
             mongo = new Mongo(host, port);
         } catch (UnknownHostException e) {
             throw new IOException("Failed to access Mongo server", e);
