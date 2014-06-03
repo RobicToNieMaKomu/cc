@@ -6,6 +6,7 @@ import com.polmos.cc.constants.Constants;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import javax.enterprise.context.ApplicationScoped;
+import org.jboss.logging.Logger;
 
 /**
  *
@@ -14,6 +15,7 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class MongoDBConnector {
 
+    private static final Logger logger = Logger.getLogger(MongoDBConnector.class);
     private static final String DB_NAME = "cc";
     
     private volatile Mongo mongo;
@@ -35,6 +37,12 @@ public class MongoDBConnector {
             db = DB_NAME;
         }
         try {
+            logger.info("MONGODB INITIALIZATION");
+            logger.info("host:");
+            logger.info("port:");
+            logger.info("db:");
+            logger.info("user:");
+            logger.info("password:");
             mongo = new Mongo(host, port);
         } catch (UnknownHostException e) {
             throw new IOException("Failed to access Mongo server", e);
