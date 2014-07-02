@@ -74,10 +74,10 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<DBObject> getDocuments(int days) {
+    public List<DBObject> getDocuments(int days, List<String> currencies) {
         List<DBObject> documents = new ArrayList<>();
         if (days == 0) {
-            documents = getRecentTwoDocuments();
+            documents = getRecentTwoDocuments(currencies);
         } else if (days > 0) {
             for (int i = 0; i < days; i++) {
                 Date from = new Date(now.get().getTime() - (i+1)*TimeUnit.DAYS.toMillis(1));
@@ -90,7 +90,7 @@ public class DAOImpl implements DAO {
     }
 
     @Override
-    public List<DBObject> getRecentTwoDocuments() {
+    public List<DBObject> getRecentTwoDocuments(List<String> currencies) {
         List<DBObject> documents = new ArrayList<>();
         DB db = mongoDBConnector.getDB();
         db.requestStart();

@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class YQLQueryBuilderImpl implements YQLQueryBuilder {
 
-    private static final String SELECT_CLAUSE = "select * from yahoo.finance.xchange where pair in ";
+    private static final String SELECT_CLAUSE = "select id, Rate, Ask, Bid from yahoo.finance.xchange where pair in ";
     private static final String LEFT_BRACKET = "(";
     private static final String RIGHT_BRACKET = ")";
     private static final String QUOTES = "\"";

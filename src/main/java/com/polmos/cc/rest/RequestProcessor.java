@@ -9,5 +9,5 @@ import javax.json.JsonArray;
  */
 public interface RequestProcessor {
     
-    JsonArray processRequest(int range, String type) throws IOException;
+    JsonArray processRequest(int range, String type, String currencies) throws IOException;
 }

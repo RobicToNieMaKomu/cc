@@ -28,10 +28,10 @@ public class RESTResources {
 
     @GET
     @Path("/mst")
-    public Response getTimeSeries(@QueryParam("range") int minutes, @QueryParam("type") String operationType) {
+    public Response getTimeSeries(@QueryParam("range") int minutes, @QueryParam("type") String operationType, @QueryParam("currencies") String currencies) {
         Response response = null;
         try {
-            JsonArray timeSeries = processor.processRequest(minutes, operationType);
+            JsonArray timeSeries = processor.processRequest(minutes, operationType, currencies);
             if (timeSeries == null) {
                 response = Response.status(Status.NOT_FOUND).build();
             } else {

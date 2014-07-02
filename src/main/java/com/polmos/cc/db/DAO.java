@@ -10,6 +10,6 @@ import java.util.List;
 public interface DAO {
     boolean createDocument(DBObject data);
     List<DBObject> getAllDocuments();
-    List<DBObject> getRecentTwoDocuments();
-    List<DBObject> getDocuments(int days);
+    List<DBObject> getRecentTwoDocuments(List<String> currencies);
+    List<DBObject> getDocuments(int days, List<String> currencies);
 }
