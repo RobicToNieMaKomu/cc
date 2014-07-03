@@ -13,5 +13,5 @@ public interface DBUtils {
     
     DBObject convertJson(JsonObject json);
     JsonObject convertDBObject(DBObject dBObject);
-    JsonArray convertDBObject(List<DBObject> dBObjects);
+    JsonArray convertDBObject(List<DBObject> dBObjects, List<String> currencies);
 }

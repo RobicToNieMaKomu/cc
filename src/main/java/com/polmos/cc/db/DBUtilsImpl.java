@@ -13,6 +13,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import org.jboss.logging.Logger;
 
 /**
@@ -22,7 +23,7 @@ import org.jboss.logging.Logger;
 public class DBUtilsImpl implements DBUtils {
 
     private static Logger logger = Logger.getLogger(DBUtilsImpl.class);
-    
+
     @Inject
     private TimeUtils timeUtils;
 
@@ -54,16 +55,39 @@ public class DBUtilsImpl implements DBUtils {
     }
 
     @Override
-    public JsonArray convertDBObject(List<DBObject> dBObjects) {
+    public JsonArray convertDBObject(List<DBObject> dBObjects, List<String> currencies) {
         JsonArray result = null;
         if (dBObjects != null) {
             JsonArrayBuilder builder = Json.createArrayBuilder();
             for (DBObject dbObject : dBObjects) {
-                builder.add(convertDBObject(dbObject));
+                builder.add(filterByCurrency(convertDBObject(dbObject), currencies));
             }
             result = builder.build();
         }
         logger.info("Size of jsonArray:" + ((result != null) ? result.size() : null));
         return result;
+    }
+
+    private JsonObject filterByCurrency(JsonObject json, List<String> currencies) {
+        JsonObject output = null;
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonObject query = json.getJsonObject("query");
+        if (query != null) {
+            JsonObject results = query.getJsonObject("results");
+            if (results != null) {
+                JsonArray rates = results.getJsonArray("rate");
+                if (rates != null) {
+                    for (int i = 0; i < rates.size(); i++) {
+                        JsonObject rate = rates.getJsonObject(i);
+                        if (currencies.contains(rate.getString("id").substring(3))) {
+                            arrayBuilder.add(rate);
+                        }
+                    }
+                }
+            }
+        }
+        objectBuilder.add("rates", arrayBuilder.build());
+        return output;
     }
 }

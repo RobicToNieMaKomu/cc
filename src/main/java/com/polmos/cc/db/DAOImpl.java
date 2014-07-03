@@ -97,7 +97,9 @@ public class DAOImpl implements DAO {
         try {
             // db.collection.find({ "unusual": {"$elemMatch":{"defindex":363,"_particleEffect":{"$in":[6,19]}  }} })
             logger.info("currencies:" + currencies);
-    
+            /*
+            Projection is not working like this yet!!!
+            https://jira.mongodb.org/browse/SERVER-831
             BasicDBObject query = new BasicDBObject("query.lang", "en-US");
             
             BasicDBObject in = new BasicDBObject();
@@ -115,9 +117,9 @@ public class DAOImpl implements DAO {
 
             logger.info("query:" + query.toMap().toString());
             logger.info("projection:" + projection.toMap().toString());
-            
+            */
             DBCollection collection = db.getCollection(EXCHANGE_RATES_COLLECTION);
-            DBCursor cursor = collection.find(query, projection).sort(new BasicDBObject("_id", -1)).limit(2);
+            DBCursor cursor = collection.find(/*query, projection*/).sort(new BasicDBObject("_id", -1)).limit(2);
             documents.addAll(cursor.toArray());
         } finally {
             db.requestDone();

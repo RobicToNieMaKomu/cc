@@ -41,7 +41,7 @@ public class RequestProcessorImpl implements RequestProcessor {
                 docs = dao.getDocuments(range, listOfCurrencies);
             }
             logger.info("Docs to convert:" + ((docs != null) ? docs.size() : null));
-            result = dbUtils.convertDBObject(docs);
+            result = dbUtils.convertDBObject(docs, listOfCurrencies);
         } catch (Exception e) {
             logger.error("Exception occurred during processing mst", e);
         }
