@@ -106,9 +106,12 @@ public class DAOImpl implements DAO {
             BasicDBObject id = new BasicDBObject();
             id.put("id", in);
             
+            BasicDBObject elemMatch = new BasicDBObject();
+            elemMatch.put("$elemMatch", id);
+            
             BasicDBObject projection = new BasicDBObject();
             projection.put("_id", 0);
-            projection.put("$elemMatch", id);
+            projection.put("query.results.rate", elemMatch);
 
             logger.info("query:" + query.toMap().toString());
             logger.info("projection:" + projection.toMap().toString());
