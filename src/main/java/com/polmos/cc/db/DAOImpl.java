@@ -98,9 +98,11 @@ public class DAOImpl implements DAO {
             BasicDBObject query = null;
             if (currencies != null) {
                 // db.collection.find({ "unusual": {"$elemMatch":{"defindex":363,"_particleEffect":{"$in":[6,19]}  }} })
+                logger.info("currencies:" + currencies);
                 BasicDBObjectBuilder builder = BasicDBObjectBuilder.start("$elemMatch", new BasicDBObject("query.results.result.id", new BasicDBObject("$in", currencies.toArray())));
                 query = new BasicDBObject("query.results.result", builder.get());
             }
+            logger.info("query:" + ((query != null) ? query.toMap().toString() : null));
             DBCollection collection = db.getCollection(EXCHANGE_RATES_COLLECTION);
             DBCursor cursor = ((query != null) ? collection.find(query) : collection.find()).sort(new BasicDBObject("_id", -1)).limit(2);
             documents.addAll(cursor.toArray());
