@@ -69,7 +69,6 @@ public class DBUtilsImpl implements DBUtils {
     }
 
     private JsonObject filterByCurrency(JsonObject json, List<String> currencies) {
-        JsonObject output = null;
         JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         JsonObject query = json.getJsonObject("query");
