@@ -80,7 +80,7 @@ public class DAOImpl implements DAO {
             documents = getRecentTwoDocuments(currencies);
         } else if (days > 0) {
             for (int i = 0; i < days; i++) {
-                Date from = new Date(now.get().getTime() - (i+1)*TimeUnit.DAYS.toMillis(1));
+                Date from = new Date(now.get().getTime() - (i + 1) * TimeUnit.DAYS.toMillis(1));
                 Date to = new Date(from.getTime() + TimeUnit.DAYS.toMillis(1));
                 documents.addAll(documentsFromTo(from, to));
             }
@@ -95,7 +95,14 @@ public class DAOImpl implements DAO {
         DB db = mongoDBConnector.getDB();
         db.requestStart();
         try {
-            DBCursor cursor = db.getCollection(EXCHANGE_RATES_COLLECTION).find().sort(new BasicDBObject("_id", -1)).limit(2);
+            BasicDBObject query = null;
+            if (currencies != null) {
+                // db.collection.find({ "unusual": {"$elemMatch":{"defindex":363,"_particleEffect":{"$in":[6,19]}  }} })
+                BasicDBObjectBuilder builder = BasicDBObjectBuilder.start("$elemMatch", new BasicDBObject("query.results.result.id", new BasicDBObject("$in", currencies.toArray())));
+                query = new BasicDBObject("query.results.result", builder.get());
+            }
+            DBCollection collection = db.getCollection(EXCHANGE_RATES_COLLECTION);
+            DBCursor cursor = ((query != null) ? collection.find(query) : collection.find()).sort(new BasicDBObject("_id", -1)).limit(2);
             documents.addAll(cursor.toArray());
         } finally {
             db.requestDone();
