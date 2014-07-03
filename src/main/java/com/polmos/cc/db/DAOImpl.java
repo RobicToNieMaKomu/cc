@@ -95,16 +95,26 @@ public class DAOImpl implements DAO {
         DB db = mongoDBConnector.getDB();
         db.requestStart();
         try {
-            BasicDBObject query = null;
-            if (currencies != null) {
-                // db.collection.find({ "unusual": {"$elemMatch":{"defindex":363,"_particleEffect":{"$in":[6,19]}  }} })
-                logger.info("currencies:" + currencies);
-                BasicDBObjectBuilder builder = BasicDBObjectBuilder.start("$elemMatch", new BasicDBObject("query.results.result.id", new BasicDBObject("$in", currencies.toArray())));
-                query = new BasicDBObject("query.results.result", builder.get());
-            }
-            logger.info("query:" + ((query != null) ? query.toMap().toString() : null));
+            // db.collection.find({ "unusual": {"$elemMatch":{"defindex":363,"_particleEffect":{"$in":[6,19]}  }} })
+            logger.info("currencies:" + currencies);
+    
+            BasicDBObject query = new BasicDBObject("query.lang", "en-US");
+            
+            BasicDBObject in = new BasicDBObject();
+            in.put("$in", currencies);
+            
+            BasicDBObject id = new BasicDBObject();
+            id.put("id", in);
+            
+            BasicDBObject projection = new BasicDBObject();
+            projection.put("_id", 0);
+            projection.put("$elemMatch", id);
+
+            logger.info("query:" + query.toMap().toString());
+            logger.info("projection:" + projection.toMap().toString());
+            
             DBCollection collection = db.getCollection(EXCHANGE_RATES_COLLECTION);
-            DBCursor cursor = ((query != null) ? collection.find(query) : collection.find()).sort(new BasicDBObject("_id", -1)).limit(2);
+            DBCursor cursor = collection.find(query, projection).sort(new BasicDBObject("_id", -1)).limit(2);
             documents.addAll(cursor.toArray());
         } finally {
             db.requestDone();
