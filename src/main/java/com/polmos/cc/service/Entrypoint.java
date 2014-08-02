@@ -25,8 +25,10 @@ public class Entrypoint {
 
     private static final Logger logger = Logger.getLogger(Entrypoint.class);
     
-    private long fxPollInterval = 1;
-    private ScheduledFuture<?> scheduledFuture;
+    private final long fxPollInterval = 1;
+    private final long cleanInterval = 1;
+    private ScheduledFuture<?> fxDownloaderFuture;
+    private ScheduledFuture<?> dbCleanerFuture;
     
     @Resource
     private ManagedScheduledExecutorService executorService;
@@ -34,15 +36,20 @@ public class Entrypoint {
     @Inject
     private YahooFxDownloader task;
     
+    @Inject
+    private DBCleaner dbCleaner;
+    
     @PostConstruct
     public void initialize() { 
         logger.info("Application is starting...");
-        scheduledFuture = executorService.scheduleAtFixedRate(task, 0, fxPollInterval, TimeUnit.MINUTES);
+        fxDownloaderFuture = executorService.scheduleAtFixedRate(task, 0, fxPollInterval, TimeUnit.MINUTES);
+        dbCleanerFuture = executorService.scheduleAtFixedRate(dbCleaner, 0, cleanInterval, TimeUnit.DAYS);
     }
     
     @PreDestroy
     public void clean() {
         logger.info("Interrupting scheduled tasks");
-        scheduledFuture.cancel(true);
+        fxDownloaderFuture.cancel(true);
+        dbCleanerFuture.cancel(true);
     }
 }

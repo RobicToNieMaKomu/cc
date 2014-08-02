@@ -86,7 +86,6 @@ public class DBUtilsImpl implements DBUtils {
                 }
             }
         }
-        
         return objectBuilder.add("rates", arrayBuilder.build()).build();
     }
 }

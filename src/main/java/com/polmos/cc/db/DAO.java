@@ -1,6 +1,7 @@
 package com.polmos.cc.db;
 
 import com.mongodb.DBObject;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,4 +13,5 @@ public interface DAO {
     List<DBObject> getAllDocuments();
     List<DBObject> getRecentTwoDocuments(List<String> currencies);
     List<DBObject> getDocuments(int days, List<String> currencies);
+    int removeBefore(Date date);
 }
