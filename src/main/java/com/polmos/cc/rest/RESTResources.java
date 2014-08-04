@@ -30,6 +30,7 @@ public class RESTResources {
     @Path("/mst")
     public Response getTimeSeries(@QueryParam("range") int minutes, @QueryParam("type") String operationType, @QueryParam("currencies") String currencies) {
         Response response = null;
+        logger.info("request:" + minutes + ", " + operationType);
         try {
             JsonArray timeSeries = processor.processRequest(minutes, operationType, currencies);
             if (timeSeries == null) {
@@ -41,6 +42,7 @@ public class RESTResources {
             logger.error("Exception while processing REST call", ex);
             response = Response.status(Status.BAD_REQUEST).build();
         }
+        logger.info("request:" + minutes + ", " + operationType + " ended");
         return response;
     }
 }
