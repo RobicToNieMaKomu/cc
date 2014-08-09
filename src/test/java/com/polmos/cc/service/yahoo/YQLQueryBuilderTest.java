@@ -36,7 +36,7 @@ public class YQLQueryBuilderTest {
         Set<String> input = new HashSet<>();
         input.add("PLNUSD");
         String output = builder.constructSelectQuery(input);
-        Assert.assertEquals("select * from yahoo.finance.xchange where pair in (\"PLNUSD\")", output);
+        Assert.assertEquals("select id, Rate, Ask, Bid from yahoo.finance.xchange where pair in (\"PLNUSD\")", output);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class YQLQueryBuilderTest {
         input.add("PLNUSD");
         input.add("PLNEUR");
         String output = builder.constructSelectQuery(input);
-        Assert.assertTrue(output.startsWith("select * from yahoo.finance.xchange where pair in ("));
+        Assert.assertTrue(output.startsWith("select id, Rate, Ask, Bid from yahoo.finance.xchange where pair in ("));
         Assert.assertTrue(output.contains("PLNUSD"));    //\"PLNUSD\", \"PLNEUR\")", output);
         Assert.assertTrue(output.contains("PLNEUR"));
         Assert.assertTrue(output.endsWith(")"));
