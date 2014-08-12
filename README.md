@@ -1,6 +1,6 @@
 Description
 =========================
-It's a one of the components of [Forex Currency Correlations App](https://github.com/RobicToNieMaKomu/ForexCurrencyCorrelations) which is responsible for:
+It's a one of the components of [Forex Currency Correlations App](https://github.com/RobicToNieMaKomu/ForexCurrencyCorrelations) and is responsible for:
 - Data polling from Yahoo Finance
 - Data caching in MongoDB
 - Geneartion of time series that are used by [MST microservice](https://github.com/RobicToNieMaKomu/mst) 
