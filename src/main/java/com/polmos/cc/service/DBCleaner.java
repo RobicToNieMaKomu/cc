@@ -14,14 +14,19 @@ public class DBCleaner implements Runnable {
 
     private static final Logger logger = Logger.getLogger(DBCleaner.class);
     private static final int DAYS_BEFORE = 7;
-    
+
     @Inject
     private DAO mongoDAO;
-    
+
     @Override
     public void run() {
         logger.info("Removing documents older than " + DAYS_BEFORE + " days");
-        int removed = mongoDAO.removeBefore(new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(DAYS_BEFORE)));
+        int removed = 0;
+        try {
+            removed = mongoDAO.removeBefore(new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(DAYS_BEFORE)));
+        } catch (Exception e) {
+            logger.error("Exception in DBCleaner", e);
+        }
         logger.info("Successfully removed " + removed + " documents");
     }
 }
