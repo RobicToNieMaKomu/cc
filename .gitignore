@@ -2,4 +2,4 @@
 /deployments/
 .classpath
 .project
-./settings
+.settings/
