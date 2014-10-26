@@ -5,13 +5,17 @@ import com.polmos.cc.constants.BundleName;
 import com.polmos.cc.constants.OperationType;
 import com.polmos.cc.db.DAO;
 import com.polmos.cc.db.DBUtils;
+import com.polmos.cc.db.commands.QueryFactory;
 import com.polmos.cc.service.ResourceManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.json.JsonArray;
+
 import org.jboss.logging.Logger;
 
 /**
@@ -27,6 +31,8 @@ public class RequestProcessorImpl implements RequestProcessor {
     private DAO dao;
     @Inject
     private DBUtils dbUtils;
+    @Inject
+    private QueryFactory queryFactory;
 
     @Override
     public JsonArray processRequest(int range, String type, String currencies) throws IOException {
@@ -34,12 +40,7 @@ public class RequestProcessorImpl implements RequestProcessor {
         List<String> listOfCurrencies = toList(currencies);
         validateInput(range, type, listOfCurrencies);
         try {
-            List<DBObject> docs = null;
-            if (range == 0) {
-                docs = dao.getRecentTwoDocuments(listOfCurrencies);
-            } else if (range > 0) {
-                docs = dao.getDocuments(range, listOfCurrencies);
-            }
+            List<DBObject> docs = dao.getDocuments(queryFactory.produce(range));
             logger.info("Docs to convert:" + ((docs != null) ? docs.size() : null));
             result = dbUtils.convertDBObject(docs, listOfCurrencies);
         } catch (Exception e) {

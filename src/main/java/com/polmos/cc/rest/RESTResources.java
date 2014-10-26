@@ -28,11 +28,11 @@ public class RESTResources {
 
     @GET
     @Path("/mst")
-    public Response getTimeSeries(@QueryParam("range") int minutes, @QueryParam("type") String operationType, @QueryParam("currencies") String currencies) {
+    public Response getTimeSeries(@QueryParam("range") int days, @QueryParam("type") String operationType, @QueryParam("currencies") String currencies) {
         Response response = null;
-        logger.info("request:" + minutes + ", " + operationType);
+        logger.info("request:" + days + ", " + operationType);
         try {
-            JsonArray timeSeries = processor.processRequest(minutes, operationType, currencies);
+            JsonArray timeSeries = processor.processRequest(days, operationType, currencies);
             if (timeSeries == null) {
                 response = Response.status(Status.NOT_FOUND).build();
             } else {
@@ -42,7 +42,7 @@ public class RESTResources {
             logger.error("Exception while processing REST call", ex);
             response = Response.status(Status.BAD_REQUEST).build();
         }
-        logger.info("request:" + minutes + ", " + operationType + " ended");
+        logger.info("request:" + days + ", " + operationType + " ended");
         return response;
     }
 }

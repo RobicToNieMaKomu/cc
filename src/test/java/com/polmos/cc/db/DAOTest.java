@@ -1,23 +1,28 @@
 package com.polmos.cc.db;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.polmos.cc.service.TimeUtils;
-import com.polmos.cc.service.TimeUtilsImpl;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.times;
+
 import java.util.Date;
-import java.util.List;
+
 import javax.enterprise.inject.Instance;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.polmos.cc.db.commands.Queryable;
+import com.polmos.cc.db.commands.SimpleQueryHolder;
+import com.polmos.cc.service.TimeUtils;
+import com.polmos.cc.service.TimeUtilsImpl;
 
 /**
  *
@@ -26,31 +31,62 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DAOTest {
 
-    @Mock
-    private DBCollection collection;
-    @Mock
-    private DBCursor cursor;
-    @Spy
-    private TimeUtils timeUtils = new TimeUtilsImpl();
-    @Mock
-    private Instance<Date> dateService;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private DB db;
-    @Mock
-    private MongoDBConnector connector;
-    @InjectMocks
-    private DAO dao = new DAOImpl();
+	@Mock
+	private DBCollection collection;
+	@Mock
+	private DBCursor cursor;
+	@Spy
+	private TimeUtils timeUtils = new TimeUtilsImpl();
+	@Mock
+	private Instance<Date> dateService;
+	@Mock
+	private DB db;
+	@Mock
+	private MongoDBConnector connector;
 
-    @Test
-    public void getDocsFromLastTwoDaysTest() {
-//        Date now = new Date();
-//        Mockito.when(cursor.limit(Matchers.anyInt())).thenReturn(cursor);
-//        Mockito.when(cursor.sort(Matchers.any(DBObject.class))).thenReturn(cursor);
-//        Mockito.when(collection.find()).thenReturn(cursor);
-//        Mockito.when(db.getCollection(Matchers.anyString())).thenReturn(collection);
-//        Mockito.when(dateService.get()).thenReturn(now);
-//        Mockito.when(connector.getDB()).thenReturn(db);
-//        List<DBObject> out = dao.getDocuments(2);
-//        Mockito.verify(db, Mockito.times(6));
-    }
+	@Mock
+	private SimpleQueryHolder queryHolder;
+
+	@Mock
+	private Queryable query;
+
+	@InjectMocks
+	private DAO dao = new DAOImpl();
+
+	@Before
+	public void setup() {
+		Mockito.when(connector.getDB()).thenReturn(db);
+	}
+
+	@Test
+	public void checkIfTransactionIsOpen() {
+		dao.getDocuments(query);
+
+		Mockito.verify(db, times(1)).requestStart();
+	}
+
+	@Test
+	public void checkIfTransactionIsClosed() {
+		dao.getDocuments(query);
+
+		Mockito.verify(db, times(1)).requestDone();
+	}
+
+	@Test
+	public void verifyIfQueryIsExecuted() {
+		dao.getDocuments(query);
+
+		Mockito.verify(query, times(1)).execute((DBCollection) anyObject());
+	}
+
+	@Test
+	public void checkIfTransactionIsClosedEvenIfRuntimeIsThrown() {
+		Mockito.when(db.getCollection(Mockito.anyString())).thenThrow(
+				RuntimeException.class);
+		try {
+			dao.getDocuments(query);
+		} catch (RuntimeException expectedException) {
+		}
+		Mockito.verify(db, times(1)).requestDone();
+	}
 }

@@ -1,20 +1,22 @@
 package com.polmos.cc.db;
 
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
-import com.polmos.cc.constants.Constants;
-import com.polmos.cc.service.TimeUtils;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+
 import org.jboss.logging.Logger;
+
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+import com.polmos.cc.constants.Constants;
+import com.polmos.cc.service.TimeUtils;
 
 /**
  *

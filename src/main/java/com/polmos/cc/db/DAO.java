@@ -1,6 +1,8 @@
 package com.polmos.cc.db;
 
 import com.mongodb.DBObject;
+import com.polmos.cc.db.commands.Queryable;
+
 import java.util.Date;
 import java.util.List;
 
@@ -10,8 +12,6 @@ import java.util.List;
  */
 public interface DAO {
     boolean createDocument(DBObject data);
-    List<DBObject> getAllDocuments();
-    List<DBObject> getRecentTwoDocuments(List<String> currencies);
-    List<DBObject> getDocuments(int days, List<String> currencies);
+    List<DBObject> getDocuments(Queryable query);
     int removeBefore(Date date);
 }
