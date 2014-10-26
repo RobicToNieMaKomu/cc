@@ -49,7 +49,7 @@ public class LastDay implements Queryable {
 		calendar.clear();
 		calendar.setTime(now);
 		calendar.set(GregorianCalendar.MINUTE, 0);
-		calendar.set(GregorianCalendar.HOUR, 0);
+		calendar.set(GregorianCalendar.HOUR_OF_DAY, 0);
 		return calendar.getTime();
 	}
 }
